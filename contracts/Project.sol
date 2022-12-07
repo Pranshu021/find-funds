@@ -53,8 +53,10 @@ contract Project {
     event refundContributionEvent(address _projectAddress, address _contrinutorAddress);
     event releaseFundsEvent(address _projectAddress, address _owner, uint256 _target, uint256 _releaseTime, uint256 _votes, uint256 _totalInvestors);
     
-    /// @dev modifier to check if the mentioned project with the address exists or not.
-    /// @param _projectAddress - address of the project
+    /**  
+    * @dev its modifier to check if the mentioned project with the address exists or not.
+    * @param _address - address of the project
+    */
     modifier projectExists(address _address) {
         require(projectInfo[_address].projectId != 0,  "No project exists with given address");
         _; 
@@ -69,7 +71,6 @@ contract Project {
         require(fundContract.getContributionInfo(_contributorAddress, _projectAddress) > 0, "You have not contributed to this project");
         _;
     }
-
     /// @dev activities like Releasing funds that can be only performed by the owner of the project
     /// @param _projectAddress - address of the project.
     modifier onlyProjectOwner(address _projectAddress) {
@@ -208,7 +209,7 @@ contract Project {
     }
 
     /// @dev returns the address of owner of project, can be project address itself.
-    /// @param address - address of project to get owner info about.
+    /// @param _address - address of project to get owner info about.
     function getOwnerofProject(address _address) external view projectExists(_address) returns (address)  {
         return projectInfo[_address].owner;
     }
@@ -216,7 +217,7 @@ contract Project {
     /** 
     * @dev returns the amount of investment made by a user to mentioned project.
     * Calls Fund contract get mapping function to retreive the ledger info.
-    * @param _contributorAddres - Address of user who contributed, can be msg.sender
+    * @param _contributorAddress - Address of user who contributed, can be msg.sender
     * @param _projectAddress - address of project to validate investment made to. 
     */
     function getContribution(address _contributorAddress, address _projectAddress) external view projectExists(_projectAddress) contributor(_contributorAddress, _projectAddress) returns (uint256) {

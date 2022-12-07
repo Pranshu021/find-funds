@@ -1,0 +1,124 @@
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+
+.home-container {
+    margin-top: 200px;
+}
+
+.homepage-heading {
+    animation: homepageHeadingAnim 2s alternate-reverse infinite;
+    /* color: #00AAFF; */
+    color: white;
+    font-family: Consolas;
+    letter-spacing: 5px;
+}
+
+.neon-heading {
+    font-size: 36pt;
+}
+
+.homepage-address {
+    display: none !important; 
+}
+
+.project-searchbar, .searchButton  {
+    text-align: center;
+}
+
+.project-search {
+    width: 620px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.884);
+    border: 2px solid rgb(10, 10, 104);
+    box-shadow: 2px 2px 20px 5px blue;
+}
+
+.findfunds-description {
+    color: white;
+    text-align: center;
+}
+
+.findfunds-description-mobile {
+    display: none;
+}
+
+.c1{
+    display: inline-block;
+}
+
+.type{
+    overflow: hidden;
+    border-right: .15em solid orange;
+    white-space: nowrap; 
+    width: 0;
+    animation: typing 4s steps(100, end) forwards;
+}
+
+.search-button {
+    width: 620px;
+}
+
+@keyframes typing {
+from { width: 0 }
+to { width: 100% }
+}
+@keyframes blink {
+from { border-color: transparent }
+to { border-color: orange; }
+}
+
+/* .error-row {
+    display: hidden
+} */
+
+@media only screen and (max-width: 600px) {
+
+    .home-container {
+        margin-top: 50px;
+    }
+    
+    .homepage-heading {
+        text-align: center !important;
+    }
+
+    .homepage-address {
+        /* animation: homepageHeadingAnim 2s alternate-reverse infinite; */
+        position: absolute;
+        bottom: 0px;
+        display: flex !important;
+        word-wrap: break-word;
+        color: white;
+        font-family: Consolas;
+        font-size: 14px;
+        overflow-x: hidden;
+    }
+
+    .search-button, .project-search, .project-searchbar {
+        width: 320px;
+        padding: 10px;
+    }
+
+    .c1 {
+        display: none;
+    }
+
+    .findfunds-description-mobile {
+        display: inline-block;
+    }
+    
+}
+
+@keyframes homepageHeadingAnim {
+    from {
+        text-shadow:
+          0 0 14px rgba(0, 170, 255, .7),
+          0 0 44px rgba(0, 170, 255, .7),
+          0 0 104px rgba(0, 170, 255, .7);
+      }
+      to {
+        text-shadow:
+          0 0 9px rgba(0, 170, 255, .7),
+          0 0 24px rgba(0, 170, 255, .7),
+          0 0 64px rgba(0, 170, 255, .7);
+      }
+}

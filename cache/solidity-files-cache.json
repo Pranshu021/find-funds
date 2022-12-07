@@ -1,0 +1,76 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "E:\\Docs\\Web3\\findfunds\\contracts\\Funds.sol": {
+      "lastModificationDate": 1664048563939,
+      "contentHash": "5490b3b02e1578601b63d8e661541ef3",
+      "sourceName": "contracts/Funds.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Funds"
+      ]
+    },
+    "E:\\Docs\\Web3\\findfunds\\contracts\\Project.sol": {
+      "lastModificationDate": 1664217661904,
+      "contentHash": "0e421ada8cf363b68e06c5f737237973",
+      "sourceName": "contracts/Project.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "IFunds",
+        "Project"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+.navlinks {
+    margin-left: 10;
+    display: flex;
+}
+
+.nav-logo {
+    cursor: "pointer";
+    font-family: 'Lilita One', cursive;
+}
+
+
+
+@media only screen and (max-width: 620px) {
+    .nav-logo {
+        text-align: center;
+    }
+
+    .navbar-text {
+        display: none;
+    }
+    
+}
+
+.nav-link {
+    text-decoration: "none";
+    color: "white";
+    font-size: "20px";
+    margin-right: 0;
+}
+
+.nav-link:hover {
+    color: "yellow";
+    border-bottom: "1px solid white";
+}
+
+

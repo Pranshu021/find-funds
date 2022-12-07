@@ -1,0 +1,45 @@
+.projectPage-container {
+    /* background-image: url("cotton-background.jpg"); */
+    /* margin: 100px 0px 100px 100px; */
+    min-height: 600px;
+    display: flexbox;
+    justify-content: center;
+    color: white;
+    background: rgb(2, 2, 77);
+    border: 2px solid darkblue;
+    display: flexbox;
+}
+
+
+.project-heading {
+    display:inline-block;
+    letter-spacing: 2px;
+    
+}
+
+.projectPage-labels {
+    text-align: end;
+    font-weight: 600;
+}
+
+.buttons {
+    max-width: 200px !important;
+}
+
+
+.buttons-row {
+    justify-content: center;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .projectPage-labels {
+        text-align: center;
+    }
+
+    .test-container {
+        max-width: 100vw;
+        min-height: 500px;
+    }
+}
+
