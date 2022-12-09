@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import '../assets/css/projectpage.css'
 import { Modal, Form } from "react-bootstrap";
 import Web3 from "web3";
+import { useSelector } from "react-redux";
 
 
 const ProjectPage = (props) => {
@@ -23,53 +24,56 @@ const ProjectPage = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const user_address = useSelector((state) => state.address.value)
 
-    const checkProjectExists = async() => {
-        try {
-            const projectData = await props.contractData.projectContract.methods.getProject(projectAddress).call()
-            setLoading(false);
-            setProjectNotFoundError(false);
-            setProjectData(projectData);
-            console.log(projectData);
-        } catch(Error) {
-            setLoading(false);
-            setProjectNotFoundError(true)
-            // console.log(Error)
-        }
-    }
 
-    const checkContributionToProject = async() => {
-        // console.log(projectAddress);
-        const contribution = await props.contractData.projectContract.methods.getContribution(props.account, projectAddress).call();
+    // const checkProjectExists = async() => {
+    //     try {
+    //         const projectData = await props.contractData.projectContract.methods.getProject(projectAddress).call()
+    //         setLoading(false);
+    //         setProjectNotFoundError(false);
+    //         setProjectData(projectData);
+    //         // console.log(projectData);
+    //     } catch(Error) {
+    //         setLoading(false);
+    //         setProjectNotFoundError(true)
+    //         // console.log(Error)
+    //     }
+    // }
 
-        const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(props.account, projectAddress).call();
+    // const checkContributionToProject = async() => {
+    //     // console.log(projectAddress);
+    //     console.log(await props.contractData.projectContract.methods)
+    //     const contribution = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
+
+    //     const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
         
-        setContributed(true)
-        if(Web3.utils.fromWei(contribution, 'ether') > 0) {
-            setContributed(true)
-            setContributionInfo({
-                contribution: Web3.utils.fromWei(contribution, 'ether'),
-                vote: votingInfo
-            })
-            // contributionElement = (
-            // <Row className="projectPage-content-rows">
-            //     <Col xs="12" lg="6" className="projectPage-labels">Your Contribution :  </Col>
-            //     <Col xs="12" lg="6">{Web3.utils.fromWei(contribution, 'ether')} ETH</Col> 
-            // </Row>
-            // )
+    //     setContributed(true)
+    //     if(Web3.utils.fromWei(contribution, 'ether') > 0) {
+    //         setContributed(true)
+    //         setContributionInfo({
+    //             contribution: Web3.utils.fromWei(contribution, 'ether'),
+    //             vote: votingInfo
+    //         })
+    //         // contributionElement = (
+    //         // <Row className="projectPage-content-rows">
+    //         //     <Col xs="12" lg="6" className="projectPage-labels">Your Contribution :  </Col>
+    //         //     <Col xs="12" lg="6">{Web3.utils.fromWei(contribution, 'ether')} ETH</Col> 
+    //         // </Row>
+    //         // )
 
-            // votingElement = (
-            // <Row className="projectPage-content-rows">
-            //     <Col xs="12" lg="6" className="projectPage-labels">Your Release Fund Vote :  </Col>
-            //     <Col xs="12" lg="6">{votingInfo}</Col> 
-            // </Row>
-            // )
-        }
-    }
+    //         // votingElement = (
+    //         // <Row className="projectPage-content-rows">
+    //         //     <Col xs="12" lg="6" className="projectPage-labels">Your Release Fund Vote :  </Col>
+    //         //     <Col xs="12" lg="6">{votingInfo}</Col> 
+    //         // </Row>
+    //         // )
+    //     }
+    // }
 
     const handleFunding = async() => {
         const fundingAmount = document.getElementById("fundingValue").value
-        await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: props.account, value: Web3.utils.toWei(fundingAmount)}).on('receipt', (receipt) => {
+        await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: user_address, value: Web3.utils.toWei(fundingAmount)}).on('receipt', (receipt) => {
             setContributed(true)
             setContributionInfo({
                 contribution: fundingAmount,
@@ -111,9 +115,53 @@ const ProjectPage = (props) => {
     )
 
     useEffect(() => {
+        const checkProjectExists = async() => {
+            try {
+                const projectData = await props.contractData.projectContract.methods.getProject(projectAddress).call()
+                setLoading(false);
+                setProjectNotFoundError(false);
+                setProjectData(projectData);
+            } catch(Error) {
+                setLoading(false);
+                setProjectNotFoundError(true)
+            }
+        }
+
         checkProjectExists();
+    }, [projectAddress, props.contractData.projectContract.methods])
+
+    useEffect(() => {
+        const checkContributionToProject = async() => {
+            // console.log(projectAddress);
+            console.log(await props.contractData.projectContract.methods)
+            const contribution = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
+    
+            const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
+            
+            setContributed(true)
+            if(Web3.utils.fromWei(contribution, 'ether') > 0) {
+                setContributed(true)
+                setContributionInfo({
+                    contribution: Web3.utils.fromWei(contribution, 'ether'),
+                    vote: votingInfo
+                })
+                // contributionElement = (
+                // <Row className="projectPage-content-rows">
+                //     <Col xs="12" lg="6" className="projectPage-labels">Your Contribution :  </Col>
+                //     <Col xs="12" lg="6">{Web3.utils.fromWei(contribution, 'ether')} ETH</Col> 
+                // </Row>
+                // )
+    
+                // votingElement = (
+                // <Row className="projectPage-content-rows">
+                //     <Col xs="12" lg="6" className="projectPage-labels">Your Release Fund Vote :  </Col>
+                //     <Col xs="12" lg="6">{votingInfo}</Col> 
+                // </Row>
+                // )
+            }
+        }
         checkContributionToProject();
-    }, [props])
+    }, [projectAddress, user_address, props.contractData.projectContract.methods])
 
  
     return (

@@ -220,7 +220,7 @@ contract Project {
     * @param _contributorAddress - Address of user who contributed, can be msg.sender
     * @param _projectAddress - address of project to validate investment made to. 
     */
-    function getContribution(address _contributorAddress, address _projectAddress) external view projectExists(_projectAddress) contributor(_contributorAddress, _projectAddress) returns (uint256) {
+    function getContribution(address _contributorAddress, address _projectAddress) public view projectExists(_projectAddress) contributor(_contributorAddress, _projectAddress) returns (uint256) {
         return fundContract.getContributionInfo(_contributorAddress, _projectAddress);
     }
 

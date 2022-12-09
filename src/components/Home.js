@@ -1,18 +1,11 @@
 import '../assets/css/home.css';
 import SearchComponent from './SearchComponent';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useEffect } from 'react';
-
-// import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 
 const Home = (props) => {
-    // useEffect(() => {
-    //     console.log(props.contractData);
-    // }, [props.contractData])
-
-    // console.log(props.contractData);
-
+	const address = useSelector((state) => state.address.value)
 
     return (
         <Container className="home-container text-center">
@@ -25,7 +18,9 @@ const Home = (props) => {
 
             <Row className="homepage-address mt-3">
                 <Col xs lg="12">
-                    <p className="address">Your Address : {props.account}</p>
+                    {/* <p className="address">Your Address : {props.account}</p> */}
+                    <p className="address">Your Address : {address}</p>
+
                 </Col>
             </Row>
 

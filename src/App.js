@@ -10,11 +10,13 @@ import ParticlesBackground from './components/ParticlesBackground';
 import RegisterProject from './components/RegisterProject';
 import ProjectPage from './components/ProjectPage';
 import { Container } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { changeAddress } from './features/address/addressSlice'
+import { loadContractData } from './features/contracts/contractSlice'
 
 
 function App() {
     const ethereum = window.ethereum;
-    const [accountDetails, setAccountDetails] = useState("")
     const [data, setData] = useState({
         projectContract: {},
         projectContractAddress: '',
@@ -22,6 +24,8 @@ function App() {
         fundsContractAddress: '',
         loading: true
     });
+
+    const dispatch = useDispatch();
 
     if(window.ethereum) {
         window.web3 = new Web3(window.ethereum);
@@ -33,10 +37,11 @@ function App() {
     }
 
     const loadData = async() => {
+        console.log("Loading data")
         const ethereum = window.ethereum;
         await ethereum.request({method: "eth_requestAccounts"})
         .then((accounts) => {
-            setAccountDetails(accounts[0]);
+            dispatch(changeAddress(accounts[0]))
         }).catch((error) => {
             if (error.code === 4001) {
                 console.log("Please connect to Metamask")
@@ -45,8 +50,9 @@ function App() {
             }
         })   
     }
+
     const handleAccountsChanged = (accounts) => {
-        setAccountDetails(accounts[0]);
+        dispatch(changeAddress(accounts[0]))
     }
     ethereum.on('accountsChanged', handleAccountsChanged)
 
@@ -55,6 +61,8 @@ function App() {
         const projectContractData = await new web3.eth.Contract(Project.abi, '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C')
         const fundsContractData = await new web3.eth.Contract(Funds.abi, '0xe2C28703E97fb0EAcD496945B19Df7d652896758')
 
+        console.log(projectContractData.methods)
+
         setData({
             projectContract: projectContractData,
             projectContractAddress: '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C',
@@ -62,17 +70,20 @@ function App() {
             fundsContractAddress: '0xe2C28703E97fb0EAcD496945B19Df7d652896758',
         })
 
+        
+
+        dispatch(loadContractData({
+            projectContractAddress: '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C',
+            projectContract: projectContractData,
+            fundsContractAddress: '0xe2C28703E97fb0EAcD496945B19Df7d652896758',
+            fundsContract: fundsContractData,
+        }))
     }
 
-    const createProject = async(name, description, address, targetAmountinEther) => {
-        const projectRegistrationStatus = await data.projectContract.methods.addProject(name, description, address.toString(), targetAmountinEther).send({from:accountDetails.toString()});
-        console.log(projectRegistrationStatus);
-    }
-
-    const searchProject = async(address) => {
-        const result = await Project.getProject(address)
-        console.log(result);
-    }
+    // const createProject = async(name, description, address, targetAmountinEther) => {
+    //     const projectRegistrationStatus = await data.projectContract.methods.addProject(name, description, address.toString(), targetAmountinEther).send({from:address});
+    //     console.log(projectRegistrationStatus);
+    // }
 
     useEffect(() => {
         // loadWeb3();
@@ -84,12 +95,13 @@ function App() {
         <Router>
             <Container fluid className="App gx-0">
                 <ParticlesBackground />
-                <NavigationBar account={accountDetails}/>
-                <Routes>
-                    <Route exact path="/" element={<Home account={accountDetails} contractData={data}/>} />
+                {/* <NavigationBar account={accountDetails}/> */}
+                <NavigationBar/>
 
-                    <Route path="/createProject" element={<RegisterProject createProjectfunction={createProject}/>} />
-                    <Route path="/project/:projectAddress" element={<ProjectPage contractData={data} account={accountDetails}/>} />
+                <Routes>
+                    <Route exact path="/" element={<Home contractData={data}/>} />
+                    {/* <Route path="/createProject" element={<RegisterProject createProjectfunction={createProject}/>} /> */}
+                    <Route path="/project/:projectAddress" element={<ProjectPage contractData={data}/>} />
                 </Routes>
             </Container>
         </Router>
