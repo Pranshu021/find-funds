@@ -12,7 +12,6 @@ import ProjectPage from './components/ProjectPage';
 import { Container } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { changeAddress } from './features/address/addressSlice'
-import { loadContractData } from './features/contracts/contractSlice'
 
 
 function App() {
@@ -70,14 +69,6 @@ function App() {
             fundsContractAddress: '0xe2C28703E97fb0EAcD496945B19Df7d652896758',
         })
 
-        
-
-        dispatch(loadContractData({
-            projectContractAddress: '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C',
-            projectContract: projectContractData,
-            fundsContractAddress: '0xe2C28703E97fb0EAcD496945B19Df7d652896758',
-            fundsContract: fundsContractData,
-        }))
     }
 
     // const createProject = async(name, description, address, targetAmountinEther) => {
