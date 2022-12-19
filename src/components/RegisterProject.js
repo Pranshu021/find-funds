@@ -4,6 +4,7 @@ import { Container, Row, Alert } from 'react-bootstrap';
 import '../assets/css/registerProject.css';
 import { useState } from 'react';
 import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 
 const RegisterProject = (props) => {
@@ -12,13 +13,16 @@ const RegisterProject = (props) => {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const user_address = useSelector((state) => state.address.value)
-
+    const navigate = useNavigate();
 
     const createProject = async(name, description, address, targetAmountinEther) => {
         // console.log("Here in register project " + props.data)
         try {
             await props.contractData.projectContract.methods.addProject(name, description, address.toString(), targetAmountinEther).send({from:user_address}).on("receipt", (receipt) => {
-                setMessage("Your Project has been registered Successfuly. Best of Luck!!")
+                setMessage("Your Project has been registered Successfully. Best of Luck!!\n Redirecting...")
+                setInterval(() => {
+                    navigate(`/project/${address}`);
+                }, 2000)
             }).on("error", (error) => {
                 setError("Transaction Failed :( Try again after sometime")
                 console.error(error)

@@ -13,6 +13,7 @@ interface IFunds {
     function getContributionInfo(address _contributorAddress, address _projectAddress) external view returns (uint256);
     function refund(address _contributorAddress, address _projectAddress) external;
     function release(address _projectAddress, address _owner, uint256 _target, uint256 _releaseTime, uint256 _votes, uint256 _numberOfInvestors) external;
+    function getBalance(address _projectAddress) external view returns (uint256);
 }
 
 contract Project {
@@ -109,12 +110,13 @@ contract Project {
     }
 
     /**
-    * @dev removeProject Function to remove a project, this function can only be called by project Owner and can be called manually or is called automatically after releaseFunds
+    * @dev removeProject Function to remove a project, this function can only be called by project Owner. Automatically called after Releasefunds.
     * If balance of project is > 0, the project cannot be removed as it still holds the funds that are invested by users
     * @param _address - Address of the project to be removed
     * @dev project is set to 0 in the list, using the sequential index being stored in parallel with id. Mapping is deleted.
     */
     function removeProject(address _address) public projectExists(_address) onlyProjectOwner(_address) {
+        require(fundContract.getBalance(_address) == 0, "Project Can't be removed. Funds are invested by people.");
         projectList[(projectInfo[_address].projectId) - 1] = project(0, '', '', address(0), 0, 0, address(0), 0, 0);
         numberOfProjects--;
         emit projectRemoved(projectInfo[_address].name, projectInfo[_address].description, _address, projectInfo[_address].owner, projectInfo[_address].target);
