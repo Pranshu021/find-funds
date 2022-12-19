@@ -91,7 +91,7 @@ function App() {
 
                 <Routes>
                     <Route exact path="/" element={<Home contractData={data}/>} />
-                    <Route path="/createProject"/>
+                    <Route path="/createProject" element={<RegisterProject contractData={data}/>} />
                     <Route path="/project/:projectAddress" element={<ProjectPage contractData={data}/>} />
                 </Routes>
             </Container>
