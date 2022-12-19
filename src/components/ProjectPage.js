@@ -76,6 +76,14 @@ const ProjectPage = (props) => {
         })
     }
 
+    const handleRemoveProject = async() => {
+        await props.contractData.projectContract.methods.removeProject(projectData.projectAddress).send({from:user_address}).on('receipt', (receipt) => {
+            setTransactionSuccessMessage("Project has been removed...")
+        }).on('error', (error) => {
+            setTransactionFailError(error);
+        })
+    }
+
 
     useEffect(() => {
         const checkProjectExists = async() => {
@@ -252,6 +260,10 @@ const ProjectPage = (props) => {
             
             {transactionSuccessMessage}
             {transactionFailError}
+            {projectData.owner === user_address ? 
+            <Row className="buttons-row mt-3">
+                <Button variant="outline-primary" onClick={handleRemoveProject} className="buttons">Remove Project</Button>
+            </Row>: <></> }
 
         </Container>
     )
