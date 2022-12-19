@@ -57,16 +57,16 @@ function App() {
 
     const loadContracts = async() => {
         const web3 = window.web3;
-        const projectContractData = await new web3.eth.Contract(Project.abi, '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C')
-        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0xe2C28703E97fb0EAcD496945B19Df7d652896758')
+        const projectContractData = await new web3.eth.Contract(Project.abi, '0x06Dc82dbaeE2f91875d9D705920fC6fccf788C28')
+        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0x7c2bb6809C6A829De4cDc0348E46E56D7eC645f5')
 
         console.log(projectContractData.methods)
 
         setData({
             projectContract: projectContractData,
-            projectContractAddress: '0x4666c07Be2f0CfdD09AC2780E4fd22E9602D202C',
+            projectContractAddress: '0x06Dc82dbaeE2f91875d9D705920fC6fccf788C28',
             fundsContract: fundsContractData,
-            fundsContractAddress: '0xe2C28703E97fb0EAcD496945B19Df7d652896758',
+            fundsContractAddress: '0x7c2bb6809C6A829De4cDc0348E46E56D7eC645f5',
         })
 
     }
@@ -91,7 +91,7 @@ function App() {
 
                 <Routes>
                     <Route exact path="/" element={<Home contractData={data}/>} />
-                    {/* <Route path="/createProject" element={<RegisterProject createProjectfunction={createProject}/>} /> */}
+                    <Route path="/createProject"/>
                     <Route path="/project/:projectAddress" element={<ProjectPage contractData={data}/>} />
                 </Routes>
             </Container>

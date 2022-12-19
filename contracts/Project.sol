@@ -194,6 +194,8 @@ contract Project {
     */
     function refundContribution(address _projectAddress) public projectExists(_projectAddress) contributor(msg.sender, _projectAddress) {
         fundContract.refund(msg.sender, _projectAddress);
+        projectInfo[_projectAddress].totalInvestors -= 1;
+        projectInfo[_projectAddress].votes -= 1;
         emit refundContributionEvent(_projectAddress, msg.sender);
     }
 

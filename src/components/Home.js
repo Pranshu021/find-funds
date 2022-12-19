@@ -2,6 +2,7 @@ import '../assets/css/home.css';
 import SearchComponent from './SearchComponent';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 
 const Home = (props) => {
@@ -38,7 +39,11 @@ const Home = (props) => {
         
             <SearchComponent contractData={props.contractData} account={props.account}/>
 
-            
+            <Row>
+                <Link to="/createProject">
+                    Register a Project
+                </Link>
+            </Row>
 
         </Container>
         
