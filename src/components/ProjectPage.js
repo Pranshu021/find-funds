@@ -107,21 +107,19 @@ const ProjectPage = (props) => {
         const checkContributionToProject = async() => {
             try {
                 setLoading(true);
-                const contribution = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
-                contribution.catch((error) => {
-                    
-                })
-        
-                const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
-                setLoading(false);
-                // setContributed(true)
-                if(Web3.utils.fromWei(contribution, 'ether') > 0) {
-                    // setContributed(true)
-                    setContributionInfo({
-                        contribution: Web3.utils.fromWei(contribution, 'ether'),
-                        vote: votingInfo
-                    })
+                const contribution = await props.contractData.projectContract.methods.hasContributed(user_address, projectAddress).call();
+                
+                if(contribution) {
+                    const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
+                    setLoading(false);
+                    if(Web3.utils.fromWei(contribution, 'ether') > 0) {
+                        setContributionInfo({
+                            contribution: Web3.utils.fromWei(contribution, 'ether'),
+                            vote: votingInfo
+                        })
+                    }
                 }
+                
             } catch(Error) {
                 setLoading(false);
             }
