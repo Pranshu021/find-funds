@@ -113,6 +113,14 @@ contract Funds {
         return contribution[_contributorAddress][_projectAddress];
     }
 
+    function hasContributed(address _contributorAddress, address _projectAddress) external view onlyProjectContract returns (bool) {
+        if(contribution[_contributorAddress][_projectAddress] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /// @dev returns current balance of any project or amount of funds raised for any project
     function getBalance(address _projectAddress) external view onlyProjectContract returns (uint256) {
         return balances[_projectAddress];
