@@ -16,7 +16,6 @@ const RegisterProject = (props) => {
     const navigate = useNavigate();
 
     const createProject = async(name, description, address, targetAmountinEther) => {
-        // console.log("Here in register project " + props.data)
         try {
             await props.contractData.projectContract.methods.addProject(name, description, address.toString(), targetAmountinEther).send({from:user_address}).on("receipt", (receipt) => {
                 setMessage("Your Project has been registered Successfully. Best of Luck!!\n Redirecting...")

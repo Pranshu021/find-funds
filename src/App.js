@@ -36,7 +36,6 @@ function App() {
     }
 
     const loadData = async() => {
-        console.log("Loading data")
         const ethereum = window.ethereum;
         await ethereum.request({method: "eth_requestAccounts"})
         .then((accounts) => {
@@ -60,7 +59,6 @@ function App() {
         const projectContractData = await new web3.eth.Contract(Project.abi, '0x06Dc82dbaeE2f91875d9D705920fC6fccf788C28')
         const fundsContractData = await new web3.eth.Contract(Funds.abi, '0x7c2bb6809C6A829De4cDc0348E46E56D7eC645f5')
 
-        console.log(projectContractData.methods)
 
         setData({
             projectContract: projectContractData,
@@ -71,13 +69,7 @@ function App() {
 
     }
 
-    // const createProject = async(name, description, address, targetAmountinEther) => {
-    //     const projectRegistrationStatus = await data.projectContract.methods.addProject(name, description, address.toString(), targetAmountinEther).send({from:address});
-    //     console.log(projectRegistrationStatus);
-    // }
-
     useEffect(() => {
-        // loadWeb3();
         loadContracts();
         loadData();
     }, [])
@@ -101,7 +93,3 @@ function App() {
 
 export default App;
 
-
-
-// Figure out how to send msg.value to send eth for funding to a project in web3.js --- Done
-// Make project contract functions public from external since they are not callable.

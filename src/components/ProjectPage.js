@@ -108,6 +108,9 @@ const ProjectPage = (props) => {
             try {
                 setLoading(true);
                 const contribution = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
+                contribution.catch((error) => {
+                    
+                })
         
                 const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
                 setLoading(false);
