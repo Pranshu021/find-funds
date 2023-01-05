@@ -113,6 +113,7 @@ const ProjectPage = (props) => {
                 setLoading(true);
                 const contribution = await props.contractData.projectContract.methods.hasContributed(user_address, projectAddress).call();
                 if(contribution) {
+                    console.log("Some contribution")
                     const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
                     setLoading(false);
                     if(Web3.utils.fromWei(contribution, 'ether') > 0) {
@@ -124,12 +125,13 @@ const ProjectPage = (props) => {
                 }
                 
             } catch(Error) {
+                console.log("No contribution")
                 setLoading(false);
             }
             
         }
         checkContributionToProject();
-    }, [projectAddress, user_address, props.contractData.projectContract.methods])
+    }, [projectAddress, user_address, props.contractData.projectContract])
 
 
     const ModalComponent = (

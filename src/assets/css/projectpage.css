@@ -5,8 +5,9 @@
     display: flexbox;
     justify-content: center;
     color: white;
-    background: rgb(2, 2, 77);
-    border: 2px solid darkblue;
+    /* background: rgb(2, 2, 77); */
+    background: #100720;
+    border: 2px solid black;
     display: flexbox;
 }
 

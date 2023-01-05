@@ -56,8 +56,8 @@ function App() {
 
     const loadContracts = async() => {
         const web3 = window.web3;
-        const projectContractData = await new web3.eth.Contract(Project.abi, '0xDEE4B308f33700cAC0AC077a988F5048Bd0A1786')
-        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0xD640cC4b5831D843C2fcaF4DA93C5c77760a696F')
+        const projectContractData = await new web3.eth.Contract(Project.abi, '0x04eA66B1a55067E94d750F26DcBc674eFDf9f51c')
+        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0x81da4A50cde3FAF006342314b6514c63E4B6BA5a')
 
 
         setData({

@@ -14,6 +14,7 @@ interface IFunds {
     function refund(address _contributorAddress, address _projectAddress) external;
     function release(address _projectAddress, address _owner, uint256 _target, uint256 _releaseTime, uint256 _votes, uint256 _numberOfInvestors) external;
     function getBalance(address _projectAddress) external view returns (uint256);
+    function hasContributed(address _contributorAddress, address _projectAddress) external view returns (bool);
 }
 
 contract Project {
@@ -147,6 +148,16 @@ contract Project {
         }
 
         emit contributionEvent(_projectAddress, msg.sender, msg.value);
+    }
+
+
+    /**
+    * @dev function contributionInfo - Returns true if _contributorAddress has funded to _projectAddress, false if no Funding.
+    * @dev require condition to check if zero address then contacts the fundContract's hasContributed function.
+    */
+    function contributionInfo(address _contributorAddress, address _projectAddress) public view projectExists(_projectAddress)returns (bool) {
+        require(_contributorAddress != address(0), "Zero Address");
+        return(fundContract.hasContributed(_contributorAddress, _projectAddress));
     }
 
     /**
