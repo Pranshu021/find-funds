@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const ProjectPage = (props) => {
     const urlparams = useParams();
     const projectAddress = urlparams.projectAddress;
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const [projectNotFoundError, setProjectNotFoundError] = useState(false);
     const [transactionFailError, setTransactionFailError] = useState("");
     const [transactionSuccessMessage, setTransactionSuccessMessage] = useState("")
@@ -28,14 +28,15 @@ const ProjectPage = (props) => {
 
     const handleFunding = async() => {
         const fundingAmount = document.getElementById("fundingValue").value
-        await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: user_address, value: Web3.utils.toWei(fundingAmount)}).on('receipt', (receipt) => {
+        await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: user_address, value: Web3.utils.toWei(fundingAmount)})
+        .on('receipt', (receipt) => {
             setContributionInfo({
                 contribution: fundingAmount,
                 vote: true
             })
             setTransactionSuccessMessage("Transaction Successful. Thanks for the funding :)")
         }).on('error', (error) => {
-            setTransactionFailError(error)
+            setTransactionFailError(error.message)
         })
 
         handleClose();
@@ -50,7 +51,7 @@ const ProjectPage = (props) => {
                 vote: !currentVote})
             setTransactionSuccessMessage("Transaction Successful. Your vote has been changed")
         }).on('error', (error) => {
-            setTransactionFailError(error)
+            setTransactionFailError(error.message)
         })
     }
 
@@ -88,13 +89,16 @@ const ProjectPage = (props) => {
     useEffect(() => {
         const checkProjectExists = async() => {
             try {
+                setTransactionFailError("");
+                setLoading(true);
+                setTimeout(() => {})
                 const projectData = await props.contractData.projectContract.methods.getProject(projectAddress).call()
                 setLoading(false);
                 setProjectNotFoundError(false);
                 setProjectData(projectData);
             } catch(Error) {
                 setLoading(false);
-                setProjectNotFoundError(true)
+                setProjectNotFoundError(true);
             }
         }
 
@@ -108,7 +112,6 @@ const ProjectPage = (props) => {
             try {
                 setLoading(true);
                 const contribution = await props.contractData.projectContract.methods.hasContributed(user_address, projectAddress).call();
-                
                 if(contribution) {
                     const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
                     setLoading(false);
@@ -159,6 +162,7 @@ const ProjectPage = (props) => {
        
  
     return (
+
 
         <Container className="projectPage-container p-4">
             <Row className="mt-3">
@@ -231,16 +235,12 @@ const ProjectPage = (props) => {
                 <Col xs="12" lg="6">{contributionInfo.vote ? <span>True</span> : <span>False</span>}</Col>
             </Row>
             </>
-
             }
-
 
             <Row className="buttons-row mt-3">
                 <Button variant="outline-primary" onClick={handleShow} className="buttons">Fund Project</Button>
                 {ModalComponent}
             </Row>
-
-            
             
             {contributionInfo.contribution > 0 ? 
             <><Row className="buttons-row mt-3">
@@ -260,7 +260,7 @@ const ProjectPage = (props) => {
 
             
             {transactionSuccessMessage}
-            {transactionFailError}
+            {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
             {projectData.owner === user_address ? 
             <Row className="buttons-row mt-3">
                 <Button variant="outline-primary" onClick={handleRemoveProject} className="buttons">Remove Project</Button>

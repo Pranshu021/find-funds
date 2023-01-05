@@ -10,6 +10,11 @@
     font-family: 'Lilita One', cursive;
 }
 
+.navbar-text {
+    color: white !important;
+    font-weight: 600;
+}
+
 
 
 @media only screen and (max-width: 620px) {
@@ -25,7 +30,6 @@
 
 .nav-link {
     text-decoration: "none";
-    color: "white";
     font-size: "20px";
     margin-right: 0;
 }
