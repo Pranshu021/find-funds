@@ -248,4 +248,8 @@ contract Project {
         return vote[_contributor][_projectAddress];
     }
 
+    function getTotalAmountInvested(address _projectAddress) external view projectExists(_projectAddress) returns(uint256) {
+        return fundContract.getBalance(_projectAddress);
+    }
+
 }

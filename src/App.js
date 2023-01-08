@@ -56,17 +56,14 @@ function App() {
 
     const loadContracts = async() => {
         const web3 = window.web3;
-        const projectContractData = await new web3.eth.Contract(Project.abi, '0x04eA66B1a55067E94d750F26DcBc674eFDf9f51c')
-        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0x81da4A50cde3FAF006342314b6514c63E4B6BA5a')
-
-
+        const projectContractData = await new web3.eth.Contract(Project.abi, '0xeCcE607EE02e55c65dFeD57B797e2669bE1e5A49')
+        const fundsContractData = await new web3.eth.Contract(Funds.abi, '0x8EB26Fda10606EC6d5DCcD684C331D036c328d99')
         setData({
             projectContract: projectContractData,
-            projectContractAddress: '0x06Dc82dbaeE2f91875d9D705920fC6fccf788C28',
+            projectContractAddress: '0xeCcE607EE02e55c65dFeD57B797e2669bE1e5A49',
             fundsContract: fundsContractData,
-            fundsContractAddress: '0x7c2bb6809C6A829De4cDc0348E46E56D7eC645f5',
+            fundsContractAddress: '0x8EB26Fda10606EC6d5DCcD684C331D036c328d99',
         })
-
     }
 
     useEffect(() => {

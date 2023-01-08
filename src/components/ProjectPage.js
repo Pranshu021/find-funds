@@ -15,6 +15,7 @@ const ProjectPage = (props) => {
     const [transactionFailError, setTransactionFailError] = useState("");
     const [transactionSuccessMessage, setTransactionSuccessMessage] = useState("")
     const [projectData, setProjectData] = useState({})
+    const [isOwner, setOwner] = useState(false);
     const [contributionInfo, setContributionInfo] = useState({
         contribution: 0,
         vote: false,
@@ -92,55 +93,58 @@ const ProjectPage = (props) => {
         })
     }
 
-    const checkProjectExists = async() => {
-        try {
-            setTransactionFailError("");
-            setTransactionSuccessMessage("");
-            setLoading(true);
-            await props.contractData.projectContract.methods.getProject(projectAddress).call().then((projectData) => {
-                setProjectData(projectData);
-                setProjectNotFoundError(false);
-                console.log(user_address + "...." + projectData.owner)
-            })
-            checkContributionToProject();
-            
-        } catch(Error) {
-            console.log(Error)
-            setLoading(false);
-            setProjectNotFoundError(true);
-        }
-    }
+    
 
-    const checkContributionToProject = async() => {
-        try {
-            await props.contractData.projectContract.methods.contributionInfo(user_address, projectAddress).call()
-            .then(async(contributionData) => {
-                if(contributionData) {
-                    const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
-                    const contributionAmount = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
-                    setLoading(false);
-                    if(Web3.utils.fromWei(String(contributionAmount), 'ether')) {
+    
+    useEffect(() => {
+        const checkProjectExists = async() => {
+            try {
+                setTransactionFailError("");
+                setTransactionSuccessMessage("");
+                setLoading(true);
+                await props.contractData.projectContract.methods.getProject(projectAddress).call().then((projectData) => {
+                    if(projectData.owner.toLowerCase() === user_address) setOwner(true);
+                    setProjectData(projectData);
+                    setProjectNotFoundError(false);
+                    console.log(user_address + "...." + projectData.owner)
+                })
+                checkContributionToProject();
+                
+            } catch(Error) {
+                setLoading(false);
+                setProjectNotFoundError(true);
+            }
+        }
+        const checkContributionToProject = async() => {
+            try {
+                await props.contractData.projectContract.methods.contributionInfo(user_address, projectAddress).call()
+                .then(async(contributionData) => {
+                    if(contributionData) {
+                        const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
+                        const contributionAmount = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
+                        setLoading(false);
+                        if(Web3.utils.fromWei(String(contributionAmount), 'ether')) {
+                            setContributionInfo({
+                                contribution: Web3.utils.fromWei(String(contributionAmount), 'ether'),
+                                vote: votingInfo
+                            })
+                        }
+                        setLoading(false);
+                    } else {
+                        setLoading(false);
                         setContributionInfo({
-                            contribution: Web3.utils.fromWei(String(contributionAmount), 'ether'),
-                            vote: votingInfo
+                            contribution: 0,
+                            vote: false
                         })
                     }
-                    setLoading(false);
-                } else {
-                    setLoading(false);
-                    setContributionInfo({
-                        contribution: 0,
-                        vote: false
-                    })
-                }
-            })
-        } catch(Error) {
-            console.log(Error)
-            setLoading(false);
-        }   
-    }
-    useEffect(() => {
+                })
+            } catch(Error) {
+                console.log(Error)
+                setLoading(false);
+            }   
+        }
         checkProjectExists();
+
     }, [projectAddress, props.contractData.projectContract.methods, user_address])
 
     
@@ -273,7 +277,7 @@ const ProjectPage = (props) => {
 
             {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
 
-            {/* {!projectNotFoundError && !isLoading && ((projectData.owner).toLowerCase() === user_address.toLowerCase()) ? 
+            {isOwner ? 
             <>
             <Row className="buttons-row mt-3">
                 <Button variant="outline-warning" onClick={handleReleaseFunds} className="buttons">Release Funds</Button>
@@ -281,10 +285,10 @@ const ProjectPage = (props) => {
             </Row>
             <Row className="buttons-row mt-3">
                 <Button variant="outline-danger" onClick={handleRemoveProject} className="buttons">Remove Project</Button>
-            </Row></>: <></> } */}
+            </Row></>: <></> }
 
-            {projectData.owner} <br></br>
-            {user_address}
+            {/* {projectData.owner} <br></br>
+            {user_address} */}
 
         </Container>
 

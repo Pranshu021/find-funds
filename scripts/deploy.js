@@ -23,8 +23,8 @@ main().catch((error) => {
 })
 /*
 Ganache
- Funds Contract Address :  0x81da4A50cde3FAF006342314b6514c63E4B6BA5a
- Project Contract Address :  0x04eA66B1a55067E94d750F26DcBc674eFDf9f51c
+ Funds Contract Address :  0x8EB26Fda10606EC6d5DCcD684C331D036c328d99
+ Project Contract Address :  0xeCcE607EE02e55c65dFeD57B797e2669bE1e5A49
 
 Optimism Goerli
  Funds Contract Address :  0x916d5333B49B4f29F582DD96Abf335fe5b78e7D9
