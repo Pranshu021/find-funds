@@ -19,6 +19,7 @@ const ProjectPage = (props) => {
         contribution: 0,
         vote: false,
     })
+    const [fundingAmount, setFundingAmount] = useState(0);
     
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -28,11 +29,12 @@ const ProjectPage = (props) => {
 
     const handleFunding = async() => {
         setTransactionFailError("");
-        const fundingAmount = document.getElementById("fundingValue").value
+        setTransactionSuccessMessage("");
+
         await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: user_address, value: Web3.utils.toWei(fundingAmount)})
         .on('receipt', (receipt) => {
             setContributionInfo({
-                contribution: fundingAmount,
+                contribution: Number(contributionInfo.contribution) + Number(fundingAmount),
                 vote: true
             })
             setTransactionSuccessMessage("Transaction Successful. Thanks for the funding :)")
@@ -45,6 +47,7 @@ const ProjectPage = (props) => {
 
     const handleVoting = async() => {
         setTransactionFailError("");
+        setTransactionSuccessMessage("");
         const currentVote = contributionInfo.vote;
         await props.contractData.projectContract.methods.toggleVote(projectData.projectAddress).send({from: user_address}) 
         .on('receipt', (receipt) => {
@@ -59,6 +62,7 @@ const ProjectPage = (props) => {
 
     const handleRefunds = async() => {
         setTransactionFailError("");
+        setTransactionSuccessMessage("");
         if(contributionInfo.contribution > 0) {
             await props.contractData.projectContract.methods.refundContribution(projectData.projectAddress).send({from: user_address}).on('receipt', (receipt) => {
                 setContributionInfo({
@@ -67,7 +71,7 @@ const ProjectPage = (props) => {
                 })
             setTransactionSuccessMessage("Transaction Successful. You have been successfully refunded.")
             }).on('error', (error) => {
-                setTransactionFailError(error)
+                setTransactionFailError(error.message)
             })
         }
     }
@@ -76,7 +80,7 @@ const ProjectPage = (props) => {
         await props.contractData.projectContract.methods.releaseFunds(projectData.projectAddress).send({from: user_address}).on('receipt', (receipt) => {
             setTransactionSuccessMessage("Transaction Successful. Use the funds for greater good!!")
         }).on('error', (error) => {
-            setTransactionFailError(error)
+            setTransactionFailError(error.message)
         })
     }
 
@@ -84,42 +88,36 @@ const ProjectPage = (props) => {
         await props.contractData.projectContract.methods.removeProject(projectData.projectAddress).send({from:user_address}).on('receipt', (receipt) => {
             setTransactionSuccessMessage("Project has been removed...")
         }).on('error', (error) => {
-            setTransactionFailError(error);
+            setTransactionFailError(error.message);
         })
     }
 
-
-    useEffect(() => {
-        const checkProjectExists = async() => {
-            try {
-                setTransactionFailError("");
-                setLoading(true);
-                setTimeout(() => {})
-                const projectData = await props.contractData.projectContract.methods.getProject(projectAddress).call()
-                setLoading(false);
-                setProjectNotFoundError(false);
+    const checkProjectExists = async() => {
+        try {
+            setTransactionFailError("");
+            setTransactionSuccessMessage("");
+            setLoading(true);
+            await props.contractData.projectContract.methods.getProject(projectAddress).call().then((projectData) => {
                 setProjectData(projectData);
-            } catch(Error) {
-                setLoading(false);
-                setProjectNotFoundError(true);
-            }
+                setProjectNotFoundError(false);
+                console.log(user_address + "...." + projectData.owner)
+            })
+            checkContributionToProject();
+            
+        } catch(Error) {
+            console.log(Error)
+            setLoading(false);
+            setProjectNotFoundError(true);
         }
+    }
 
-        checkProjectExists();
-    }, [projectAddress, props.contractData.projectContract.methods])
-
-
-
-    useEffect(() => {
-        const checkContributionToProject = async() => {
-            try {
-                setLoading(true);
-                const contributioninfo = await props.contractData.projectContract.methods.contributionInfo(user_address, projectAddress).call();
-                if(contributioninfo) {
-                    console.log("Some contribution")
+    const checkContributionToProject = async() => {
+        try {
+            await props.contractData.projectContract.methods.contributionInfo(user_address, projectAddress).call()
+            .then(async(contributionData) => {
+                if(contributionData) {
                     const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
                     const contributionAmount = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
-                    console.log("Got the voting info")
                     setLoading(false);
                     if(Web3.utils.fromWei(String(contributionAmount), 'ether')) {
                         setContributionInfo({
@@ -127,17 +125,25 @@ const ProjectPage = (props) => {
                             vote: votingInfo
                         })
                     }
+                    setLoading(false);
+                } else {
+                    setLoading(false);
+                    setContributionInfo({
+                        contribution: 0,
+                        vote: false
+                    })
                 }
-                
-            } catch(Error) {
-                console.log(Error)
-                console.log("No contribution")
-                setLoading(false);
-            }
-            
-        }
-        checkContributionToProject();
-    }, [projectAddress, user_address, props.contractData.projectContract])
+            })
+        } catch(Error) {
+            console.log(Error)
+            setLoading(false);
+        }   
+    }
+    useEffect(() => {
+        checkProjectExists();
+    }, [projectAddress, props.contractData.projectContract.methods, user_address])
+
+    
 
 
     const ModalComponent = (
@@ -147,9 +153,10 @@ const ProjectPage = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="fundingValue">
                         <Form.Label>Fund Amount in ETH</Form.Label>
-                        <Form.Control step="0.1" type="number" placeholder="Amount in ETH" id="fundingValue"/>
+                        <Form.Control step="0.1" type="number" placeholder="Amount in ETH" onChange={(e) =>
+                        setFundingAmount(e.target.value)} value={fundingAmount}/>
                         <Form.Text className="text-muted">
                         Your small contribution might help someone's dream :)
                         </Form.Text>
@@ -259,23 +266,29 @@ const ProjectPage = (props) => {
                 <Button variant="outline-warning" onClick={handleVoting} className="buttons">{contributionInfo.vote ? <span>Vote to hold funds</span> : <span>Vote to Release Funds</span>}</Button>
                 {ModalComponent}
             </Row></>: <></>}
-
-            {projectData.owner === user_address ? 
-            <Row className="buttons-row mt-3">
-                <Button variant="outline-warning" onClick={handleReleaseFunds} className="buttons">Release Funds</Button>
-                {ModalComponent}
-            </Row> : <></>}
+            
 
             
             {transactionSuccessMessage ? <Alert variant="success" className="mt-3 text-center">{transactionSuccessMessage} </Alert>: <></> }
 
             {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
-            {projectData.owner === user_address ? 
+
+            {/* {!projectNotFoundError && !isLoading && ((projectData.owner).toLowerCase() === user_address.toLowerCase()) ? 
+            <>
             <Row className="buttons-row mt-3">
-                <Button variant="outline-primary" onClick={handleRemoveProject} className="buttons">Remove Project</Button>
-            </Row>: <></> }
+                <Button variant="outline-warning" onClick={handleReleaseFunds} className="buttons">Release Funds</Button>
+                {ModalComponent}
+            </Row>
+            <Row className="buttons-row mt-3">
+                <Button variant="outline-danger" onClick={handleRemoveProject} className="buttons">Remove Project</Button>
+            </Row></>: <></> } */}
+
+            {projectData.owner} <br></br>
+            {user_address}
 
         </Container>
+
+
     )
 
    
