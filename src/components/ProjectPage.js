@@ -27,6 +27,7 @@ const ProjectPage = (props) => {
     const user_address = useSelector((state) => state.address.value)
 
     const handleFunding = async() => {
+        setTransactionFailError("");
         const fundingAmount = document.getElementById("fundingValue").value
         await props.contractData.projectContract.methods.contributeToProject(projectData.projectAddress).send({from: user_address, value: Web3.utils.toWei(fundingAmount)})
         .on('receipt', (receipt) => {
@@ -43,6 +44,7 @@ const ProjectPage = (props) => {
     }
 
     const handleVoting = async() => {
+        setTransactionFailError("");
         const currentVote = contributionInfo.vote;
         await props.contractData.projectContract.methods.toggleVote(projectData.projectAddress).send({from: user_address}) 
         .on('receipt', (receipt) => {
@@ -56,6 +58,7 @@ const ProjectPage = (props) => {
     }
 
     const handleRefunds = async() => {
+        setTransactionFailError("");
         if(contributionInfo.contribution > 0) {
             await props.contractData.projectContract.methods.refundContribution(projectData.projectAddress).send({from: user_address}).on('receipt', (receipt) => {
                 setContributionInfo({
@@ -111,20 +114,23 @@ const ProjectPage = (props) => {
         const checkContributionToProject = async() => {
             try {
                 setLoading(true);
-                const contribution = await props.contractData.projectContract.methods.hasContributed(user_address, projectAddress).call();
-                if(contribution) {
+                const contributioninfo = await props.contractData.projectContract.methods.contributionInfo(user_address, projectAddress).call();
+                if(contributioninfo) {
                     console.log("Some contribution")
                     const votingInfo = await props.contractData.projectContract.methods.getVotingInfo(user_address, projectAddress).call();
+                    const contributionAmount = await props.contractData.projectContract.methods.getContribution(user_address, projectAddress).call();
+                    console.log("Got the voting info")
                     setLoading(false);
-                    if(Web3.utils.fromWei(contribution, 'ether') > 0) {
+                    if(Web3.utils.fromWei(String(contributionAmount), 'ether')) {
                         setContributionInfo({
-                            contribution: Web3.utils.fromWei(contribution, 'ether'),
+                            contribution: Web3.utils.fromWei(String(contributionAmount), 'ether'),
                             vote: votingInfo
                         })
                     }
                 }
                 
             } catch(Error) {
+                console.log(Error)
                 console.log("No contribution")
                 setLoading(false);
             }
@@ -261,7 +267,8 @@ const ProjectPage = (props) => {
             </Row> : <></>}
 
             
-            {transactionSuccessMessage}
+            {transactionSuccessMessage ? <Alert variant="success" className="mt-3 text-center">{transactionSuccessMessage} </Alert>: <></> }
+
             {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
             {projectData.owner === user_address ? 
             <Row className="buttons-row mt-3">
