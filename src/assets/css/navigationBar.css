@@ -5,6 +5,10 @@
     display: flex;
 }
 
+.navbar {
+    background: #140c29;
+}
+
 .nav-logo {
     cursor: "pointer";
     font-family: 'Lilita One', cursive;

@@ -8,7 +8,7 @@ const NavigationBar = (props) => {
 	const address = useSelector((state) => state.address.value)
 
 	return (
-		<Navbar bg="primary" variant="dark" >
+		<Navbar variant="dark" className="navbar">
 			<Container>
 				<Navbar.Brand href="/" className="nav-logo">findFunds</Navbar.Brand>
 				<Navbar.Toggle />
