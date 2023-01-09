@@ -10,18 +10,18 @@ import { useSelector } from "react-redux";
 const ProjectPage = (props) => {
     const urlparams = useParams();
     const projectAddress = urlparams.projectAddress;
+
     const [isLoading, setLoading] = useState(false);
     const [projectNotFoundError, setProjectNotFoundError] = useState(false);
     const [transactionFailError, setTransactionFailError] = useState("");
-    const [transactionSuccessMessage, setTransactionSuccessMessage] = useState("")
-    const [projectData, setProjectData] = useState({})
+    const [transactionSuccessMessage, setTransactionSuccessMessage] = useState("");
+    const [projectData, setProjectData] = useState({});
     const [isOwner, setOwner] = useState(false);
     const [contributionInfo, setContributionInfo] = useState({
         contribution: 0,
         vote: false,
     })
     const [fundingAmount, setFundingAmount] = useState(0);
-    
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -93,9 +93,6 @@ const ProjectPage = (props) => {
         })
     }
 
-    
-
-    
     useEffect(() => {
         const checkProjectExists = async() => {
             try {
@@ -103,10 +100,9 @@ const ProjectPage = (props) => {
                 setTransactionSuccessMessage("");
                 setLoading(true);
                 await props.contractData.projectContract.methods.getProject(projectAddress).call().then((projectData) => {
-                    if(projectData.owner.toLowerCase() === user_address) setOwner(true);
+                    if(projectData.owner.toLowerCase() === user_address) {setOwner(true); } else {setOwner(false);}
                     setProjectData(projectData);
                     setProjectNotFoundError(false);
-                    console.log(user_address + "...." + projectData.owner)
                 })
                 checkContributionToProject();
                 
