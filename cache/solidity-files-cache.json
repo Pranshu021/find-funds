@@ -37,8 +37,8 @@
       ]
     },
     "E:\\Docs\\Web3\\findfunds\\contracts\\Project.sol": {
-      "lastModificationDate": 1673206844452,
-      "contentHash": "138b1f1cd7246b8e5148e8f11bf5710b",
+      "lastModificationDate": 1673779235413,
+      "contentHash": "b10b714e0a278fda6b61e8a4b5921dcc",
       "sourceName": "contracts/Project.sol",
       "solcConfig": {
         "version": "0.8.17",

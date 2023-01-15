@@ -17,6 +17,7 @@ const ProjectPage = (props) => {
     const [transactionSuccessMessage, setTransactionSuccessMessage] = useState("");
     const [projectData, setProjectData] = useState({});
     const [isOwner, setOwner] = useState(false);
+    const [reload, setReload] = useState(false);
     const [contributionInfo, setContributionInfo] = useState({
         contribution: 0,
         vote: false,
@@ -56,6 +57,7 @@ const ProjectPage = (props) => {
                 ...contributionInfo, 
                 vote: !currentVote})
             setTransactionSuccessMessage("Transaction Successful. Your vote has been changed")
+            setReload(true);
         }).on('error', (error) => {
             setTransactionFailError(error.message)
         })
@@ -141,7 +143,7 @@ const ProjectPage = (props) => {
         }
         checkProjectExists();
 
-    }, [projectAddress, props.contractData.projectContract.methods, user_address])
+    }, [projectAddress, props.contractData.projectContract.methods, user_address, reload])
 
     
 
@@ -201,6 +203,68 @@ const ProjectPage = (props) => {
                     }
                 </Col>
             </Row>
+
+            {/* <Row className="text-center project-heading">
+                <h1 className="projectHeading">{projectData.name}</h1>
+            </Row>
+
+            <Row className="projectPage-content-rows text-center">
+                <h3 className="project-description">{projectData.description}</h3>
+            </Row>
+
+            <Row className="top-content-row mt-3">
+                <Col lg={{span:2, offset: 1}} xs={12} sm={12} className="text-center data-columns">
+                    Project Address <br></br>
+                    {projectData.projectAddress}
+                </Col>
+
+                <Col lg={2}></Col>
+
+                <Col lg={{span:2}} xs={12} sm={12} className="text-center data-columns">
+                    Total Investors <br></br>
+                    
+                </Col>
+
+                <Col lg={2}></Col>
+
+                <Col lg={{span:2}} xs={12} sm={12} className="text-center data-columns">
+                    
+                </Col>
+
+            </Row>
+
+            <Row className="top-content-row mt-3">
+                <Col lg={{span:2, offset: 1}} xs={12} sm={12} className="text-center data-columns">
+                    
+                </Col>
+
+                <Col lg={2}></Col>
+
+                <Col lg={{span:2}} xs={12} sm={12} className="text-center data-columns">
+                    
+                </Col>
+
+                <Col lg={2}></Col>
+
+                <Col lg={{span:2}} xs={12} sm={12} className="text-center data-columns">
+                    
+                </Col>
+
+            </Row> */}
+
+            {/* <Row className="top-content-row">
+                <Col lg="4" xs="12" sm="12" className="text-center data-columns">
+
+                </Col>
+
+                <Col lg="4" xs="12" sm="12" className="text-center data-columns">
+                    
+                </Col>
+
+                <Col lg="4" xs="12" sm="12" className="text-center data-columns">
+                    
+                </Col>
+            </Row> */}
       
 
             <Row className="text-center project-heading">
@@ -208,7 +272,7 @@ const ProjectPage = (props) => {
             </Row>
 
             <Row className="projectPage-content-rows text-center">
-                <h3>{projectData.description}</h3>
+                <h3 className="project-description">{projectData.description}</h3>
             </Row>
 
             <Row className="projectPage-content-rows">
@@ -233,6 +297,11 @@ const ProjectPage = (props) => {
 
             <Row className="projectPage-content-rows">
                 <Col xs="12" lg="6" className="projectPage-labels">Fund Releasing Votes : </Col>
+                <Col xs="12" lg="6">{projectData.votes}</Col> 
+            </Row>
+
+            <Row className="projectPage-content-rows">
+                <Col xs="12" lg="6" className="projectPage-labels">Total Funds Raised : </Col>
                 <Col xs="12" lg="6">{projectData.votes}</Col> 
             </Row>
 
@@ -266,12 +335,6 @@ const ProjectPage = (props) => {
                 <Button variant="outline-warning" onClick={handleVoting} className="buttons">{contributionInfo.vote ? <span>Vote to hold funds</span> : <span>Vote to Release Funds</span>}</Button>
                 {ModalComponent}
             </Row></>: <></>}
-            
-
-            
-            {transactionSuccessMessage ? <Alert variant="success" className="mt-3 text-center">{transactionSuccessMessage} </Alert>: <></> }
-
-            {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
 
             {isOwner ? 
             <>
@@ -285,6 +348,10 @@ const ProjectPage = (props) => {
 
             {/* {projectData.owner} <br></br>
             {user_address} */}
+
+            {transactionSuccessMessage ? <Alert variant="success" className="mt-3 text-center">{transactionSuccessMessage} </Alert>: <></> }
+
+            {transactionFailError ? <Alert variant="danger" className="mt-3 text-center">{transactionFailError} [Tranasction Failed] </Alert>: <></> }
 
         </Container>
 

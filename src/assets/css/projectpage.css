@@ -1,22 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;400&display=swap');
+
 .projectPage-container {
-    /* background-image: url("cotton-background.jpg"); */
-    /* margin: 100px 0px 100px 100px; */
-    min-height: 600px;
-    display: flexbox;
+    min-height: 100vh;
+    min-width: 100vw;
     justify-content: center;
+    justify-items: center;
     color: white;
-    /* background: rgb(2, 2, 77); */
     background: #100720;
     border: 2px solid black;
-    display: flexbox;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.top-content-row {
+    width: 100vw;
+}
+
+.data-columns {
+    justify-content: center;
+    height: 200px;
+    border: 1px solid white;
 }
 
 
 .project-heading {
-    display:inline-block;
     letter-spacing: 2px;
-    
 }
+
+.project-description {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* .projectPage-content-rows {
+    text-align: center;
+    padding: 10px;
+} */
 
 .projectPage-labels {
     text-align: end;
@@ -24,7 +43,8 @@
 }
 
 .buttons {
-    max-width: 200px !important;
+    max-width: 1525px !important;
+    height: 75px;
 }
 
 
